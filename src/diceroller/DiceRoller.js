@@ -8,24 +8,15 @@ import d20 from './images/d20-icon.png';
 import d100 from './images/d100-icon.png';
 import Slider from 'material-ui/Slider';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import _ from 'lodash';
 
-
-const rollD8 = event =>
-{
-    console.log("onClicked, event:", event);
-};
-const onHowMany = howMany =>
-{
-
-};
 const imageStyle = {
     cursor: 'pointer',
-    width: '64px',
-    maxWidth: '64px'
+    width: '32px',
+    maxWidth: '32px'
 };
 const cardStyle = {
     width: '460px',
@@ -52,13 +43,13 @@ class DiceRoller extends React.Component {
         this.setState({howMany: value});
     }
 
-    rollD4 = event => this.setState({dieType: 4});
-    rollD6 = event => this.setState({dieType: 6});
-    rollD8 = event => this.setState({dieType: 8});
-    rollD10 = event => this.setState({dieType: 10});
-    rollD12 = event => this.setState({dieType: 12});
-    rollD20 = event => this.setState({dieType: 20});
-    rollD100 = event => this.setState({dieType: 100});
+    rollD4 = event => this.setState({whatType: 4});
+    rollD6 = event => this.setState({whatType: 6});
+    rollD8 = event => this.setState({whatType: 8});
+    rollD10 = event => this.setState({whatType: 10});
+    rollD12 = event => this.setState({whatType: 12});
+    rollD20 = event => this.setState({whatType: 20});
+    rollD100 = event => this.setState({whatType: 100});
 
     randomRoll = type => Math.floor(Math.random() * type) + 1;
     rollDice = (howMany, whatType) => _.chain(Array(howMany))
@@ -72,7 +63,10 @@ class DiceRoller extends React.Component {
     
     roll = event => {
         const rollResult = this.rollDice(this.state.howMany, this.state.whatType);
-        console.log("rollResult:", rollResult);
+        if(this.props.onRollResult)
+        {
+            this.props.onRollResult(rollResult);   
+        }
         this.setState({rollResult: rollResult});
     }
 
@@ -93,7 +87,7 @@ class DiceRoller extends React.Component {
                 onChange={this.setHowMany}
                 />
     
-            <b>What Type:</b>
+            <b>What Type: d{this.state.whatType}</b>
             <ul style={diceListStyle}>
                 <li>d4: <img src={d4} style={imageStyle} onClick={this.rollD4} /></li>
                 <li>d6: <img src={d6} style={imageStyle} onClick={this.rollD6} /></li>
@@ -109,7 +103,7 @@ class DiceRoller extends React.Component {
             <p>Total: {this.state.rollResult.total}</p>
         </CardText>
         <CardActions>
-          <FlatButton label="Roll" onClick={this.roll} />
+          <RaisedButton label="Roll" primary={true} onClick={this.roll} />
         </CardActions>
       </Card>
         );
