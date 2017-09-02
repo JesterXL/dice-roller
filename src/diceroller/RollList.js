@@ -4,8 +4,8 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import FlatButton from 'material-ui/FlatButton';
 
 const cardStyle = {
-    width: '460px',
-    maxWidth: '460px'
+    width: '320px',
+    maxWidth: '320px'
 };
 
 class RollList extends React.Component {

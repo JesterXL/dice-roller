@@ -19,8 +19,8 @@ const imageStyle = {
     maxWidth: '32px'
 };
 const cardStyle = {
-    width: '460px',
-    maxWidth: '460px'
+    width: '320px',
+    maxWidth: '320px'
 };
 const diceListStyle = {
     listStyleType: 'none'
@@ -97,10 +97,10 @@ class DiceRoller extends React.Component {
                 <li>d20: <img src={d20} style={imageStyle} onClick={this.rollD20} /></li>
                 <li>d100: <img src={d100} style={imageStyle} onClick={this.rollD100} /></li>
             </ul>
-            <b>Roll Results:</b>
+            {/* <b>Roll Results:</b>
             <p>How Many: {this.state.rollResult.howMany}</p>
             <p>What Type: {this.state.rollResult.whatType}</p>
-            <p>Total: {this.state.rollResult.total}</p>
+            <p>Total: {this.state.rollResult.total}</p> */}
         </CardText>
         <CardActions>
           <RaisedButton label="Roll" primary={true} onClick={this.roll} />
