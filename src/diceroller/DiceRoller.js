@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import _ from 'lodash';
+import uuidv4 from 'uuid/v4';
 
 const imageStyle = {
     cursor: 'pointer',
@@ -63,6 +64,7 @@ class DiceRoller extends React.Component {
     
     roll = event => {
         const rollResult = this.rollDice(this.state.howMany, this.state.whatType);
+        rollResult.id = uuidv4();
         if(this.props.onRollResult)
         {
             this.props.onRollResult(rollResult);   

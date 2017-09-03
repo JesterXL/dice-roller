@@ -8,11 +8,11 @@ const cardStyle = {
     maxWidth: '320px'
 };
 
-class RollList extends React.Component {
+class UserList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rollResults: []
+            users: []
         };
     }
 
@@ -20,23 +20,25 @@ class RollList extends React.Component {
         return (
         <Card style={cardStyle}>
             <CardHeader
-            title="Dice Roll Results"
+            title="Users"
             />
             <CardText>
-                {this.renderRollResults()}
+                {this.renderUsers()}
             </CardText>
         </Card>
       )
     }
 
-    renderRollResults() {
-        if(_.isNil(this.props.rollResults) || this.props.rollResults.length < 1)
+    renderUsers() {
+        if(_.isNil(this.props.users) || this.props.users.length < 1)
         {
-            return (<div>No rolls to show yet.</div>);   
+            return (<div>No users connected at this time.</div>);   
         }
-        const items = _.map(this.props.rollResults, item => {
-            console.log("item:", item);
-            return <li key={item.id}>Rolled a <b>{item.total}</b> on a {item.howMany}d{item.whatType}</li>
+        const items = _.map(this.props.users, item => {
+            return <li key={item.uuid}>
+                <b>UUID:</b> {item.uuid}
+                <p>state: {item.state}</p>
+            </li>
         }
         );
         return (
@@ -47,4 +49,4 @@ class RollList extends React.Component {
     }
 }
 
-export default RollList;
+export default UserList;
