@@ -5,7 +5,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import DiceRoller from './diceroller/DiceRoller';
 import RollList from './diceroller/RollList';
 import UserList from './userlist/UserList';
-import { connectAndListen, publishRollResult, hereNow } from './pubnub';
+import { connectAndListen, publishRollResult, hereNow, changeUserName } from './pubnub';
 import _ from 'lodash';
 const {pubnub, subject} = connectAndListen();
 
@@ -35,9 +35,16 @@ class App extends Component {
     .pluck('data')
     .subscribe(
       presence => {
+        const removeDupes = list => _.chain(list).sortBy(['created']).uniqBy(item => item.uuid).value();
         if(presence.action === 'join')
         {
-          this.setState({users: [...this.state.users, {uuid: presence.uuid, id: presence.uuid, state: presence.state}]});
+          const list = removeDupes([...this.state.users, {
+            uuid: presence.uuid, 
+            id: presence.uuid, 
+            state: presence.state,
+            created: Date.now()
+          }]);
+          this.setState({users: list});
         }
         else if(presence.action === 'leave' || presence.action === 'timeout')
         {
@@ -46,6 +53,18 @@ class App extends Component {
             ...this.state.users.slice(0, index), 
             ...this.state.users.slice(index + 1)
           ];
+          const list = removeDupes(newUsers);
+          this.setState({users: list});
+        }
+        else if(presence.action === 'state-change')
+        {
+          const index = _.findIndex(this.state.users, item => item.id === presence.uuid);
+          const newUsers = [
+            ...this.state.users.slice(0, index),
+            {uuid: presence.uuid, id: presence.uuid, state: presence.state, created: Date.now()},
+            ...this.state.users.slice(index + 1)
+          ];
+          // const list = removeDupes(newUsers);
           this.setState({users: newUsers});
         }
       }
@@ -64,6 +83,10 @@ class App extends Component {
     publishRollResult(rollResult);
   };
 
+  changeName = newName => {
+    changeUserName(newName);
+  }
+
   render() {
     return (
       <div>
@@ -71,7 +94,7 @@ class App extends Component {
           <span style={appStyle}>
             <DiceRoller onRollResult={this.onRollResult} />
             <RollList rollResults={this.state.rollResults} />
-            <UserList users={this.state.users} />
+            <UserList users={this.state.users} onChangeName={this.changeName} />
           </span>
         </MuiThemeProvider>
       </div>

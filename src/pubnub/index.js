@@ -41,6 +41,20 @@ export const hereNow = () =>
         subject.next({type: 'herenow', data: response.channels.dice.occupants});
     });
 
+export const changeUserName = newName => {
+    console.log("changeUserName, newName:", newName);
+    pubnub.setState(
+        {
+            state: {name: newName},
+            channels: ['dice']
+        },
+        (status, response) => {
+            console.log("changeUserName, status:", status);
+            console.log("changeUserName, response:", response);
+        }
+    );
+};
+
 export const connectAndListen = () =>
 {
 

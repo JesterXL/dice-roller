@@ -1,7 +1,8 @@
 import React from 'react';
 import _ from 'lodash';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 const cardStyle = {
     width: '320px',
@@ -16,6 +17,19 @@ class UserList extends React.Component {
         };
     }
 
+    changeName = () => {
+        if(this.props.onChangeName)
+        {
+            this.props.onChangeName(this.state.newName);   
+        }
+    }
+
+    onNewNameChange = event => {
+        this.setState({
+            newName: event.target.value
+        })
+    }
+
     render() {
         return (
         <Card style={cardStyle}>
@@ -25,9 +39,17 @@ class UserList extends React.Component {
             <CardText>
                 {this.renderUsers()}
             </CardText>
+            <CardActions>
+                <TextField hintText="Your Name" onChange={this.onNewNameChange} />
+                <RaisedButton label="Change Name" onClick={this.changeName} />
+            </CardActions>
         </Card>
       )
     }
+
+    getUserName = user =>
+        _.get(user, 'state.name') ? _.get(user, 'state.name')
+        : user.uuid.substr(0, 5) + '...';
 
     renderUsers() {
         if(_.isNil(this.props.users) || this.props.users.length < 1)
@@ -36,8 +58,7 @@ class UserList extends React.Component {
         }
         const items = _.map(this.props.users, item => {
             return <li key={item.uuid}>
-                <b>UUID:</b> {item.uuid}
-                <p>state: {item.state}</p>
+                <b>{this.getUserName(item)}</b>
             </li>
         }
         );
